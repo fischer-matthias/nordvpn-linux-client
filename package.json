@@ -1,11 +1,28 @@
 {
   "name": "electron-run-shell-example",
   "version": "0.2.0",
+  "description": "An example of a standalone HTML5 app using GitHub's Electron project (Chrome Engine + Node.js). This shows running a bash shell as a child process and pouring the output into HTML5 elements.",
   "main": "main.js",
   "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
   },
-  "author": "Martin A. Jackson ",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinjackson/electron-run-shell-example.git"
+  },
+  "keywords": [
+    "electron",
+    "nodejs",
+    "run",
+    "shell"
+  ],
+  "author": "Martin A. Jackson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/martinjackson/electron-run-shell-example/issues"
+  },
+  "homepage": "https://github.com/martinjackson/electron-run-shell-example#readme",
   "devDependencies": {
     "electron-prebuilt": "^0.32.2"
   },
