@@ -1,32 +1,33 @@
 {
-  "name": "electron-run-shell-example",
-  "version": "0.2.0",
-  "description": "An example of a standalone HTML5 app using GitHub's Electron project (Chrome Engine + Node.js). This shows running a bash shell as a child process and pouring the output into HTML5 elements.",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/martinjackson/electron-run-shell-example.git"
-  },
-  "keywords": [
-    "electron",
-    "nodejs",
-    "run",
-    "shell"
-  ],
-  "author": "Martin A. Jackson",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/martinjackson/electron-run-shell-example/issues"
-  },
-  "homepage": "https://github.com/martinjackson/electron-run-shell-example#readme",
-  "devDependencies": {
-    "electron-prebuilt": "^0.32.2"
-  },
-  "dependencies": {
-    "electron-is": "^3.0.0"
-  }
+    "name": "nordvpn-linux-client",
+    "version": "0.1.0",
+    "description": "",
+    "main": "./src/main.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "electron-packager .",
+        "start": "electron ."
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/fischer-matthias/nordvpn-linux-client.git"
+    },
+    "keywords": [
+        "electron",
+        "nodejs",
+        "run",
+        "shell"
+    ],
+    "bugs": {
+        "url": "https://github.com/fischer-matthias/nordvpn-linux-client/issues"
+    },
+    "homepage": "https://github.com/fischer-matthias/nordvpn-linux-client#readme",
+    "devDependencies": {
+        "electron-packager": "^13.1.1",
+        "electron-prebuilt": "^0.32.2"
+    },
+    "dependencies": {
+        "electron-is": "^3.0.0",
+        "electron-sudo": "^3.0.13"
+    }
 }

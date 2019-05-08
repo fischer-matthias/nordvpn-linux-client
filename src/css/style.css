@@ -1,0 +1,12 @@
+body {
+    padding: 32px;
+}
+
+textarea {
+   resize: none;
+}
+
+.log-list {
+    min-height: 280px;
+    height: 280px;
+}
