@@ -35,7 +35,7 @@ module.exports = function (rootPath) {
             process: {
                 on: function (ps) {
                     _process.childProcess = ps;
-                    logOutput.append('Subprocess started ...');
+                    logOutput.append('Starting process ...');
                     prepareLogs();
                 },
                 stdout: function (msg) {

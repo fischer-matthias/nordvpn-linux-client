@@ -78,6 +78,6 @@ function onCreateProcessClicked() {
 function onKillProcessClicked() {
     if (processExecuter.stop() === 0) {
         logOutput.clear();
-        dom.getStatus().value = 'Stopped ...';
+        dom.getStatus().value = 'Process stopped ...';
     }
 };
