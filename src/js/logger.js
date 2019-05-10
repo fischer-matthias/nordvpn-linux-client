@@ -1,7 +1,8 @@
+var domManipulator = require('./dom-manipulator')();
+
 module.exports = function (dom) {
 
     var _console = {};
-    var _dom = dom;
 
     function generateTimestamp() {
         return new Date().toISOString() + ': ';
@@ -9,7 +10,7 @@ module.exports = function (dom) {
 
     function log(msg) {
         console.log(generateTimestamp() + msg);
-        _dom.value = _dom.value + msg + '\n';
+        domManipulator.value = domManipulator.value + msg + '\n';
     }
 
     _console.append = function (msg) {
@@ -18,7 +19,7 @@ module.exports = function (dom) {
 
     _console.clear = function () {
         console.log(generateTimestamp() + 'Clear logs');
-        _dom.value = '';
+        domManipulator.value = '';
     }
 
     return _console;

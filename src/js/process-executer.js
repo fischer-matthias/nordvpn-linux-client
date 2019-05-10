@@ -1,65 +1,43 @@
-var dom = require('./dom')();
-var logOutput = require('./log-output')(dom.getLogList());
+var spawn = require('child_process').spawn;
+var logger = require('./logger')();
 
-var sudo = require('electron-sudo');
-
-module.exports = function (rootPath) {
-
-    function logStartInfo(user, file) {
-        logOutput.append('--------------- Nordvpn-Info ---------------');
-        logOutput.append('User: ' + user);
-        logOutput.append('File: ' + file);
-        logOutput.append('--------------- Nordvpn-Info ---------------');
-    }
-
-    function prepareLogs() {
-        if (_process.childProcess !== null) {
-            _process.childProcess.stdout.on('data', function (data) {
-                logOutput.append(data);
-            });
-
-            _process.childProcess.stderr.on('data', function (data) {
-                logOutput.append(data);
-            });
-        }
-    }
+module.exports = function () {
 
     var _process = {};
-    _process.rootPath = rootPath;
     _process.childProcess = null;
+    _process.pid = null;
 
     _process.start = function (configFile, authFile) {
 
-        var options = {
-            name: 'nordvpn subprocess',
-            process: {
-                on: function (ps) {
-                    _process.childProcess = ps;
-                    logOutput.append('Starting process ...');
-                    prepareLogs();
-                },
-                stdout: function (msg) {
-                    logOutput.append(msg);
-                },
-                stderr: function (err) {
-                    logOutput.append(err);
-                }
-            }
-        };
+        _process.childProcess = spawn('pkexec', ['openvpn', '--config', configFile, '--auth-user-pass', authFile]);
 
-        var concatedCommand = 'openvpn --config "' + configFile + '" --auth-user-pass "' + authFile + '"';
-        sudo.exec(concatedCommand, options, function (error) {
-            logOutput.append(error);
+        _process.pid = _process.childProcess.pid;
+        console.log(`Started openvpn-subprocess with pid ${_process.pid}.`);
+        domManipulator.getStatus().value = 'Process started ...';
+        notificator.message('Status', 'Connection successful!');
+
+        _process.childProcess.stdout.on('data', function (data) {
+            logger.append(data.toString());
+        });
+
+        _process.childProcess.stderr.on('data', function (data) {
+            logger.append(data.toString());
+        });
+
+        _process.childProcess.on('exit', function (code) {
+            console.log(`Stopped openvpn process with code ${code.toString()}.`);
         });
     }
 
     _process.stop = function () {
-        if (_process.childProcess !== null) {
-            _process.childProcess.kill();
-            return 0;
+        if (_process.pid !== null) {
+            const killProcess = spawn('pkexec', ['kill', _process.pid]);
+            killProcess.on('exit', function (code) {
+                if (code != 0) {
+                    logger.append(`Killprocess returned with code ${code}`);
+                }
+            });
         }
-
-        return 1;
     }
 
     return _process;
