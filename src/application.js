@@ -41,27 +41,7 @@ function onServerSelected(id) {
     if (id !== null && id !== undefined && id !== -1) {
         serverSelector.loadCountryInfo(id);
     }
-}
-
-function onSaveConfigClicked() {
-    if (domManipulator.getSaveCredentials().checked) {
-        config.config.saveCredentials = true;
-    } else {
-        config.config.saveCredentials = false;
-    }
-
-    if (domManipulator.getUdp().checked && !domManipulator.getTcp().checked) {
-        config.config.udp_tcp = 'udp';
-    } else if (!domManipulator.getUdp().checked && domManipulator.getTcp().checked) {
-        config.config.udp_tcp = 'tcp';
-    } else {
-        config.config.udp_tcp = 'udp';
-    }
-
-    config.writeFile(function () {
-        notificator.message('Saved!', `Config saved.`);
-    });
-}
+};
 
 function onCreateProcessClicked() {
     if (is.linux()) {
@@ -88,4 +68,28 @@ function onCreateProcessClicked() {
 
 function onKillProcessClicked() {
     processExecuter.stop();
+};
+
+function onClearlogClicked() {
+    logger.clear();
+};
+
+function onSaveConfigClicked() {
+    if (domManipulator.getSaveCredentials().checked) {
+        config.config.saveCredentials = true;
+    } else {
+        config.config.saveCredentials = false;
+    }
+
+    if (domManipulator.getUdp().checked && !domManipulator.getTcp().checked) {
+        config.config.udp_tcp = 'udp';
+    } else if (!domManipulator.getUdp().checked && domManipulator.getTcp().checked) {
+        config.config.udp_tcp = 'tcp';
+    } else {
+        config.config.udp_tcp = 'udp';
+    }
+
+    config.writeFile(function () {
+        notificator.message('Saved!', `Config saved.`);
+    });
 };
