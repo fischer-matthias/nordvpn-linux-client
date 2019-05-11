@@ -1,33 +1,38 @@
+const { app, BrowserWindow } = require('electron');
 
-var app = require('app');
-var BrowserWindow = require('browser-window');
+var win;
 
-require('crash-reporter').start();
+function createWindow() {
+    win = new BrowserWindow({
+        width: 800 + 410,
+        height: 770,
+        resizable: false,
+        fullscreen: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
 
-var mainWindow = null;
+    win.loadFile(`${__dirname}/index.html`);
+    win.setMenu(null);
+    win.setMenuBarVisibility(false);
+    win.webContents.openDevTools();
 
-app.on('window-all-closed', function () {
-    if (process.platform != 'darwin') {
+    win.on('closed', () => {
+        win = null;
+    });
+}
+
+app.on('ready', createWindow);
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
         app.quit();
     }
 });
 
-app.on('ready', function () {
-
-    mainWindow = new BrowserWindow({
-        width: 800,// + 410,
-        height: 770,
-        resizable: false,
-        fullscreen: false,
-        webPreferences: { webSecurity: false }
-    });
-
-    mainWindow.loadUrl('file://' + __dirname + '/index.html');
-    mainWindow.setMenu(null);
-    // mainWindow.openDevTools();    // requires a width 410px 
-
-    mainWindow.on('closed', function () {
-        mainWindow = null;
-    });
+app.on('activate', () => {
+    if (win === null) {
+        createWindow();
+    }
 });
-

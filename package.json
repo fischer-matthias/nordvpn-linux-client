@@ -22,11 +22,14 @@
     },
     "homepage": "https://github.com/fischer-matthias/nordvpn-linux-client#readme",
     "devDependencies": {
+        "electron": "^5.0.1",
         "electron-packager": "^13.1.1",
         "electron-prebuilt": "^0.32.2"
     },
     "dependencies": {
         "electron-is": "^3.0.0",
+        "electron-menu": "^1.0.0",
+        "electron-tray": "^0.1.1",
         "fs": "0.0.1-security",
         "os": "^0.1.1"
     }
