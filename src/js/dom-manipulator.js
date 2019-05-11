@@ -13,6 +13,12 @@ module.exports = function () {
     _dom.getFile = function () { return returnDOM('file'); };
     _dom.getOS = function () { return returnDOM('os'); };
     _dom.getLogList = function () { return returnDOM('log-list'); };
+    _dom.getOptions = function () { return returnDOM('options'); };
+    _dom.getSaveCredentials = function () { return returnDOM('saveCredentials'); };
+    _dom.getUdp = function () { return returnDOM('udp'); };
+    _dom.getTcp = function () { return returnDOM('tcp'); };
+    _dom.getConnect = function () { return returnDOM('connect'); };
+    _dom.getDisconnect = function () { return returnDOM('disconnect'); };
 
     return _dom;
 };

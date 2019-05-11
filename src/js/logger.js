@@ -1,16 +1,11 @@
-var domManipulator = require('./dom-manipulator')();
-
-module.exports = function (dom) {
+module.exports = function () {
 
     var _console = {};
-
-    function generateTimestamp() {
-        return new Date().toISOString() + ': ';
-    }
+    var _domManipulator = require('./dom-manipulator')();
 
     function log(msg) {
-        console.log(generateTimestamp() + msg);
-        domManipulator.value = domManipulator.value + msg + '\n';
+        console.log(msg);
+        _domManipulator.getLogList().value = msg + '\n' + _domManipulator.getLogList().value;
     }
 
     _console.append = function (msg) {
@@ -18,8 +13,18 @@ module.exports = function (dom) {
     };
 
     _console.clear = function () {
-        console.log(generateTimestamp() + 'Clear logs');
-        domManipulator.value = '';
+        _domManipulator.getLogList().value = '';
+    }
+
+    _console.fakeTimestamp = function () {
+        var timestamp = '';
+        var now = new Date();
+        var time = now.toTimeString().substr(0, 8);
+
+        timestamp = now.toDateString();
+        timestamp = timestamp.substr(0, timestamp.length - 4);
+        timestamp = timestamp + time + ' ' + now.getFullYear();
+        return timestamp;
     }
 
     return _console;

@@ -1,40 +1,74 @@
-var spawn = require('child_process').spawn;
-var logger = require('./logger')();
-
-module.exports = function () {
+module.exports = function (config, cfc) {
 
     var _process = {};
+    var _spawn = require('child_process').spawn;
+    var _logger = require('./logger')();
+    var _config = config;
+    var _cfc = cfc;
+
     _process.childProcess = null;
     _process.pid = null;
 
     _process.start = function (configFile, authFile) {
 
-        _process.childProcess = spawn('pkexec', ['openvpn', '--config', configFile, '--auth-user-pass', authFile]);
+        var isFileDeleted = _config.config.saveCredentials;
 
+        _process.childProcess = _spawn('pkexec', ['openvpn', '--config', configFile, '--auth-user-pass', authFile]);
         _process.pid = _process.childProcess.pid;
-        console.log(`Started openvpn-subprocess with pid ${_process.pid}.`);
-        domManipulator.getStatus().value = 'Process started ...';
-        notificator.message('Status', 'Connection successful!');
+
+        var timestamp = _logger.fakeTimestamp();
+        _logger.append(`${timestamp} Started openvpn-subprocess with pid ${_process.pid}.`);
+        domManipulator.getStatus().value = 'starting';
+        domManipulator.getConnect().disabled = true;
+        domManipulator.getOptions().disabled = true;
+        domManipulator.getDisconnect().disabled = false;
 
         _process.childProcess.stdout.on('data', function (data) {
-            logger.append(data.toString());
+            _logger.append(data.toString().trim());
+
+            if (!isFileDeleted) {
+                setTimeout(function () {
+                    _cfc.delete(function () {
+                        console.log(`Credentials file deleted.`);
+                    });
+                }, 8000);
+                isFileDeleted = true;
+            }
+
+            if (data.toString().trim().indexOf('Initialization Sequence Completed') > -1) {
+                domManipulator.getStatus().value = 'running';
+                notificator.message('Status', 'Connection successful!');
+            }
+
+            if (data.toString().trim().indexOf('AUTH_FAILED') > -1) {
+                notificator.message('Error', 'Authorization failed!');
+                domManipulator.getPass().value = '';
+                domManipulator.getPass().focus();
+            }
         });
 
         _process.childProcess.stderr.on('data', function (data) {
-            logger.append(data.toString());
+            _logger.append(data.toString().trim());
         });
 
         _process.childProcess.on('exit', function (code) {
-            console.log(`Stopped openvpn process with code ${code.toString()}.`);
+            timestamp = _logger.fakeTimestamp();
+            _logger.append(`${timestamp} Stopped openvpn - subprocess with code ${code}.`);
+            domManipulator.getStatus().value = 'stopped';
+            notificator.message('Status', 'Connection stopped!');
+
+            domManipulator.getConnect().disabled = false;
+            domManipulator.getOptions().disabled = false;
+            domManipulator.getDisconnect().disabled = true;
         });
     }
 
     _process.stop = function () {
         if (_process.pid !== null) {
-            const killProcess = spawn('pkexec', ['kill', _process.pid]);
+            const killProcess = _spawn('pkexec', ['kill', _process.pid]);
             killProcess.on('exit', function (code) {
                 if (code != 0) {
-                    logger.append(`Killprocess returned with code ${code}`);
+                    console.error(`Kill - Process exit code ${code}.`);
                 }
             });
         }
