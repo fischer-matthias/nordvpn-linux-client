@@ -3,6 +3,8 @@ module.exports = function (config, cfc) {
     var _process = {};
     var _spawn = require('child_process').spawn;
     var _logger = require('./logger')();
+    var _domMainpulator = require('./dom-manipulator')();
+
     var _config = config;
     var _cfc = cfc;
 
@@ -18,10 +20,10 @@ module.exports = function (config, cfc) {
 
         var timestamp = _logger.fakeTimestamp();
         _logger.append(`${timestamp} Started openvpn-subprocess with pid ${_process.pid}.`);
-        domManipulator.getStatus().value = 'starting';
-        domManipulator.getConnect().disabled = true;
-        domManipulator.getOptions().disabled = true;
-        domManipulator.getDisconnect().disabled = false;
+        _domMainpulator.getStatus().value = 'starting';
+        _domMainpulator.getConnect().disabled = true;
+        _domMainpulator.getOptions().disabled = true;
+        _domMainpulator.getDisconnect().disabled = false;
 
         _process.childProcess.stdout.on('data', function (data) {
             _logger.append(data.toString().trim());
@@ -36,14 +38,14 @@ module.exports = function (config, cfc) {
             }
 
             if (data.toString().trim().indexOf('Initialization Sequence Completed') > -1) {
-                domManipulator.getStatus().value = 'running';
+                _domMainpulator.getStatus().value = 'running';
                 notificator.message('Status', 'Connection successful!');
             }
 
             if (data.toString().trim().indexOf('AUTH_FAILED') > -1) {
                 notificator.message('Error', 'Authorization failed!');
-                domManipulator.getPass().value = '';
-                domManipulator.getPass().focus();
+                _domMainpulator.getPass().value = '';
+                _domMainpulator.getPass().focus();
             }
         });
 
@@ -54,12 +56,12 @@ module.exports = function (config, cfc) {
         _process.childProcess.on('exit', function (code) {
             timestamp = _logger.fakeTimestamp();
             _logger.append(`${timestamp} Stopped openvpn - subprocess with code ${code}.`);
-            domManipulator.getStatus().value = 'stopped';
+            _domMainpulator.getStatus().value = 'stopped';
             notificator.message('Status', 'Connection stopped!');
 
-            domManipulator.getConnect().disabled = false;
-            domManipulator.getOptions().disabled = false;
-            domManipulator.getDisconnect().disabled = true;
+            _domMainpulator.getConnect().disabled = false;
+            _domMainpulator.getOptions().disabled = false;
+            _domMainpulator.getDisconnect().disabled = true;
         });
     }
 
