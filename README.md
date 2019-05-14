@@ -1,8 +1,10 @@
 # Unofficial nordvpn linux client
+A simple nordvpn client based on openvpn and electron.
 
 ## Dependencies
 - ca-certificates
 - electron
+- openvpn
 - unzip
 - wget
 
