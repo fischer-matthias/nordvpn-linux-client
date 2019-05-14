@@ -39,7 +39,9 @@ module.exports = function () {
     }
 
     function createDirectoryStructure() {
-        _fileSystem.mkdir(_config.directoryPath);
+        _fileSystem.mkdir(_config.directoryPath, function() {
+            console.log(`Folder '${_config.directoryPath}' created.`);
+        });
     }
 
     function createConfigFile() {

@@ -7,6 +7,7 @@ var domManipulator = require('./js/dom-manipulator')();
 
 ////////////// File-Things
 var config = require('./js/config')();
+var ndownloader = require('./js/nordvpn-downloader')();
 var cfc = require('./js/credentials-file-creator')();
 
 config.readConfigFile(function () {
@@ -28,6 +29,8 @@ config.readConfigFile(function () {
         domManipulator.getUdp().checked = false;
         domManipulator.getTcp().checked = true;
     }
+
+    ndownloader.check();
 });
 
 ////////////// RunTime

@@ -25,8 +25,12 @@ module.exports = function (config, cfc) {
         _domMainpulator.getOptions().disabled = true;
         _domMainpulator.getDisconnect().disabled = false;
 
-        _process.childProcess.stdout.on('data', function (data) {
+        function log(data) {
             _logger.append(data.toString().trim());
+        }
+
+        _process.childProcess.stdout.on('data', function (data) {
+            log(data);
 
             if (!isFileDeleted) {
                 setTimeout(function () {
@@ -49,9 +53,7 @@ module.exports = function (config, cfc) {
             }
         });
 
-        _process.childProcess.stderr.on('data', function (data) {
-            _logger.append(data.toString().trim());
-        });
+        _process.childProcess.stderr.on('data', log);
 
         _process.childProcess.on('exit', function (code) {
             timestamp = _logger.fakeTimestamp();
