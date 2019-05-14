@@ -3,6 +3,7 @@ var domManipulator = require('./dom-manipulator')(config);
 module.exports = function () {
     var _selector = {};
     var _config = config;
+    var _os = require('os');
     _selector.countries = [];
 
     function loadCountries() {
@@ -37,7 +38,7 @@ module.exports = function () {
                     && servers[0] !== null && servers[0] !== undefined
                     && servers[0].hostname !== null && servers[0].hostname !== undefined) {
                     var udp_tcp = _config.config.udp_tcp;
-                    domManipulator.getFile().value = `/etc/openvpn/ovpn_${udp_tcp}/${servers[0].hostname}.${udp_tcp}.ovpn`;
+                    domManipulator.getFile().value = `${_os.homedir}/.nordvpn-client/ovpn/ovpn_${udp_tcp}/${servers[0].hostname}.${udp_tcp}.ovpn`;
                 }
             }
         };
